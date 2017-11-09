@@ -9,14 +9,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private ImageView previousDay;
@@ -30,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mQuery = new DatabaseQuery();
+        mQuery = new DatabaseQuery(this);
         mLayout = (RelativeLayout)findViewById(R.id.left_event_column);
         eventIndex = mLayout.getChildCount();
         currentDate = (TextView)findViewById(R.id.display_current_date);
@@ -69,26 +66,11 @@ public class MainActivity extends AppCompatActivity {
     }
     private void displayDailyEvents(){
         Date calendarDate = cal.getTime();
-
-        List<EventObjects> dailyEvent = new ArrayList<>();
-
-        dailyEvent.add(new EventObjects(1, "ESB Failed", new java.util.Date(), new java.util.Date()));
-
-        dailyEvent.add(new EventObjects(2, "Database Failed", new java.util.Date(), new java.util.Date()));
-
-        dailyEvent.add(new EventObjects(3, "Production Issue", new java.util.Date(), new java.util.Date()));
-
-        dailyEvent.add(new EventObjects(4, "Innovation", new java.util.Date(), new java.util.Date()));
-
-        dailyEvent.add(new EventObjects(5, "FX Failed", new java.util.Date(), new java.util.Date()));
-
-
-        //List<EventObjects> dailyEvent = mQuery.getAllFutureEvents(calendarDate);
+        List<EventObjects> dailyEvent = mQuery.getAllFutureEvents(calendarDate);
         for(EventObjects eObject : dailyEvent){
             Date eventDate = eObject.getDate();
             Date endDate = eObject.getEnd();
             String eventMessage = eObject.getMessage();
-            System.out.println("The Time Frame"+getEventTimeFrame(eventDate, endDate));
             int eventBlockHeight = getEventTimeFrame(eventDate, endDate);
             Log.d(TAG, "Height " + eventBlockHeight);
             displayEventSection(eventDate, eventBlockHeight, eventMessage);

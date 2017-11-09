@@ -1,39 +1,43 @@
 package com.example.jatinmahajan.smash;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-
 /**
  * Created by jatinmahajan on 05/11/17.
  */
 
-public class DatabaseQuery {
+import android.content.Context;
+import android.database.Cursor;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
-    public List<EventObjects> getAllFutureEvents(Date mDate) {
-       /* Calendar calDate = Calendar.getInstance();
+public class DatabaseQuery extends DatabaseObject{
+
+    private static final String tag = Database.class.getSimpleName();
+
+    public DatabaseQuery(Context context) {
+        super(context);
+    }
+
+    public List<EventObjects> getAllFutureEvents(Date mDate){
+        Calendar calDate = Calendar.getInstance();
         Calendar dDate = Calendar.getInstance();
         calDate.setTime(mDate);
 
         int calDay = calDate.get(Calendar.DAY_OF_MONTH);
         int calMonth = calDate.get(Calendar.MONTH) + 1;
-        int calYear = calDate.get(Calendar.YEAR);*/
+        int calYear = calDate.get(Calendar.YEAR);
 
         List<EventObjects> events = new ArrayList<>();
-
-
-        events.add(new EventObjects(1, "ESB Failed", new java.util.Date(), new java.util.Date()));
-
-
-
-     /*   String query = "select * from events";
-       // Cursor cursor = this.getDbConnection().rawQuery(query, null);
-        if (cursor.moveToFirst()) {
-            do {
-                int id = cursor.getInt(0);
-
+        String query = "select * from events";
+        Cursor cursor = this.getDbConnection().rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
                 int id = cursor.getInt(0);
                 String message = cursor.getString(cursor.getColumnIndexOrThrow("message"));
                 String startDate = cursor.getString(cursor.getColumnIndexOrThrow("reminder"));
@@ -46,19 +50,16 @@ public class DatabaseQuery {
                 int dMonth = dDate.get(Calendar.MONTH) + 1;
                 int dYear = dDate.get(Calendar.YEAR);
 
-                if (calDay == dDay && calMonth == dMonth && calYear == dYear) {
+                if(calDay == dDay && calMonth == dMonth && calYear == dYear){
                     events.add(new EventObjects(id, message, reminderDate, end));
                 }
-            } while (cursor.moveToNext());
+            }while (cursor.moveToNext());
         }
-      //  cursor.close();
-
-        */
-
+        cursor.close();
         return events;
     }
 
-  /*  private Date convertStringToDate(String dateInString) {
+    private Date convertStringToDate(String dateInString){
         DateFormat format = new SimpleDateFormat("d-MM-yyyy HH:mm", Locale.ENGLISH);
         Date date = null;
         try {
@@ -67,5 +68,5 @@ public class DatabaseQuery {
             e.printStackTrace();
         }
         return date;
-    }*/
+    }
 }
